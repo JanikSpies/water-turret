@@ -4,12 +4,14 @@ from contextlib import nullcontext
 import cv2
 
 from turret import overlay
-from turret.aiming import TurretAngles, aim_error
-from turret.controls import QUIT_KEYS, key_to_nudge
+from turret.aiming import TurretAngles, aim_error, angles_for_error
+from turret.controls import QUIT_KEYS, TRACKING_TOGGLE_KEYS, key_to_nudge
 from turret.hardware.servo_link import ServoLink, find_arduino_port
 from turret.vision.pose_detector import PoseDetector
 
 WINDOW_NAME = "Water Turret"
+# Flip the image horizontally so left/right matches the turret (and it looks like a mirror).
+MIRROR_CAMERA = True
 
 
 def parse_args():
@@ -35,15 +37,15 @@ def main():
         raise SystemExit("Couldn't connect to camera")
 
     angles = TurretAngles()
+    tracking = False
 
     with PoseDetector() as detector, open_servos(args.port) as servos:
-        if servos:
-            servos.move(angles.pan, angles.tilt)
-
         while True:
             success, frame = cap.read()
             if not success:
                 break
+            if MIRROR_CAMERA:
+                frame = cv2.flip(frame, 1)
 
             detection = detector.detect(frame)
 
@@ -53,18 +55,23 @@ def main():
                 error = aim_error(detection.target, (width, height))
                 overlay.draw_detection(frame, detection)
                 overlay.draw_aim(frame, detection.target, error)
-            overlay.draw_angles(frame, angles.pan, angles.tilt)
+                if tracking:
+                    angles.follow(*angles_for_error(error))
+            overlay.draw_angles(frame, angles.pan, angles.tilt, tracking)
 
             cv2.imshow(WINDOW_NAME, frame)
             key = cv2.waitKeyEx(1)
             if key in QUIT_KEYS:
                 break
+            if key in TRACKING_TOGGLE_KEYS:
+                tracking = not tracking
 
             nudge = key_to_nudge(key)
             if nudge:
                 angles.nudge(*nudge)
-                if servos:
-                    servos.move(angles.pan, angles.tilt)
+
+            if servos:
+                servos.move(angles.pan, angles.tilt)
 
     cap.release()
     cv2.destroyAllWindows()

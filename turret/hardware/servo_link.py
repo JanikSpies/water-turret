@@ -20,13 +20,19 @@ class ServoLink:
 
     def __init__(self, port: str):
         self._serial = serial.Serial(port, BAUD_RATE, timeout=0)
+        self._last_sent: tuple[int, int] | None = None
         # The Uno resets when the port opens; give it time to boot.
         time.sleep(RESET_DELAY_S)
 
-    def move(self, pan: int, tilt: int):
+    def move(self, pan: float, tilt: float):
+        command = (round(pan), round(tilt))
+        if command == self._last_sent:
+            return
+        self._last_sent = command
+
         # We don't use the "OK" replies, so drop them before they pile up.
         self._serial.reset_input_buffer()
-        self._serial.write(f"{pan},{tilt}\n".encode())
+        self._serial.write(f"{command[0]},{command[1]}\n".encode())
 
     def close(self):
         self._serial.close()

@@ -6,6 +6,7 @@ RIGHT_KEYS = {63235, 65363, ord("d")}
 UP_KEYS = {63232, 65362, ord("w")}
 DOWN_KEYS = {63233, 65364, ord("s")}
 QUIT_KEYS = {ord("q")}
+TRACKING_TOGGLE_KEYS = {ord("t")}
 
 
 def key_to_nudge(key: int) -> tuple[int, int] | None:

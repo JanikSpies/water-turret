@@ -27,7 +27,7 @@ curl -L -o models/pose_landmarker_lite.task \
 python -m turret.main
 ```
 
-Steer the turret with the arrow keys (or WASD), press `q` to quit.
+Steer the turret with the arrow keys (or WASD), press `t` to toggle tracking, `q` to quit.
 The Arduino is auto-detected; pass `--port /dev/...` to override.
 
 ## Firmware

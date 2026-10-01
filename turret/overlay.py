@@ -25,10 +25,11 @@ def draw_detection(frame, detection: Detection):
     cv2.circle(frame, detection.target, 8, RED, -1)
 
 
-def draw_angles(frame, pan: int, tilt: int):
+def draw_angles(frame, pan: float, tilt: float, tracking: bool):
+    mode = "TRACKING" if tracking else "MANUAL"
     cv2.putText(
         frame,
-        f"pan={pan} tilt={tilt}",
+        f"pan={pan:.0f} tilt={tilt:.0f} {mode}",
         (10, 60),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.8,
