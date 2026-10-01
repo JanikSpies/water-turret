@@ -27,4 +27,20 @@ curl -L -o models/pose_landmarker_lite.task \
 python -m turret.main
 ```
 
-Press `q` to quit.
+Steer the turret with the arrow keys (or WASD), press `q` to quit.
+The Arduino is auto-detected; pass `--port /dev/...` to override.
+
+## Firmware
+
+`firmware/turret_servos` drives the pan/tilt servos. Open it in the Arduino IDE and upload it.
+
+Wiring:
+
+| Servo wire      | Connects to                         |
+| --------------- | ----------------------------------- |
+| Pan signal      | Arduino pin 9                       |
+| Tilt signal     | Arduino pin 10                      |
+| Red (+)         | External 5–6 V supply +             |
+| Brown/black (−) | External supply − **and** Arduino GND |
+
+Send `<pan>,<tilt>` (e.g. `90,90`) at 115200 baud with a newline.

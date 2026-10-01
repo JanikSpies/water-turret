@@ -25,6 +25,18 @@ def draw_detection(frame, detection: Detection):
     cv2.circle(frame, detection.target, 8, RED, -1)
 
 
+def draw_angles(frame, pan: int, tilt: int):
+    cv2.putText(
+        frame,
+        f"pan={pan} tilt={tilt}",
+        (10, 60),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        WHITE,
+        2,
+    )
+
+
 def draw_aim(frame, target, error: tuple[float, float]):
     cv2.line(frame, frame_center(frame), target, YELLOW, 2)
     dx, dy = error
