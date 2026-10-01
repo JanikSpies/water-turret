@@ -3,6 +3,7 @@ _pycache__/
 *$py.class
 
 venv/
+.venv/
 env/
 ENV/
 .env
@@ -10,3 +11,5 @@ ENV/
 .DS_Store
 
 .vscode/
+
+models/
