@@ -20,3 +20,11 @@ mkdir -p models
 curl -L -o models/pose_landmarker_lite.task \
   https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
 ```
+
+## Run
+
+```Shell
+python -m turret.main
+```
+
+Press `q` to quit.
