@@ -35,10 +35,16 @@ def main():
         result = detector.detect_for_video(mp_image, timestamp_ms)
 
         if result.pose_landmarks:
-            nose = result.pose_landmarks[0][0]
-            print(f"Nose: x={nose.x:.2f} y={nose.y:.2f}")
-        else:
-            print("No person")
+            height, width = frame.shape[:2]
+            landmarks = result.pose_landmarks[0]
+
+            for landmark in landmarks:
+                point = (int(landmark.x * width), int(landmark.y * height))
+                cv2.circle(frame, point, 4, (0, 255, 0), -1)
+
+            nose = landmarks[0]
+            nose_point = (int(nose.x * width), int(nose.y * height))
+            cv2.circle(frame, nose_point, 8, (0, 0, 255), -1)
 
         cv2.imshow("Test", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):
